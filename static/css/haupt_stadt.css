@@ -1,0 +1,93 @@
+.container {
+    display: flex;
+    height: 100vh;
+    background-image: url('/static/images/derevnya_fon.webp'); 
+    background-size: cover;
+}
+#go_fight_button {
+    position: absolute; /* ИЛИ relative, fixed, depending on your layout needs */
+    top: 140px; /* Расстояние от верхнего края страницы */
+    left: 180px; /* Расстояние от левого края страницы */
+    display: inline-block; /* Для корректного масштабирования */
+    transition: transform 0.3s ease-in-out; /* Плавный переход */
+}
+
+#go_fight_button .image-container {
+    text-align: center; /* Центрирование содержимого */
+}
+
+#go_fight_button img{
+    width: 100px;
+    display: block;
+    margin: 0 auto; /* Центрирование картинки */
+}
+
+#go_fight_button button {
+    text-decoration: none; 
+    display: block;
+    margin: 0 auto;
+    cursor: pointer;
+    margin-top: -20px;
+}
+#go_fight_button:hover {
+    transform: scale(1.1); /* Увеличение при наведении */
+}
+
+#heartz {
+    position: absolute; /* ИЛИ relative, fixed, depending on your layout needs */
+    top: 340px; /* Расстояние от верхнего края страницы */
+    left: 400px; /* Расстояние от левого края страницы */
+    display: inline-block; /* Для корректного масштабирования */
+    transition: transform 0.3s ease-in-out; /* Плавный переход */
+}
+
+#heartz .image-container {
+    text-align: center; /* Центрирование содержимого */
+}
+
+#heartz img{
+    width: 70px;
+    display: block;
+    margin: 0 auto; /* Центрирование картинки */
+    cursor: pointer;
+}
+
+#heartz button {
+    text-decoration: none; 
+    display: block;
+    margin: 0 auto;
+    cursor: pointer;
+    margin-top: 0;
+}
+#heartz:hover {
+    transform: scale(1.1); /* Увеличение при наведении */
+}
+#navik_button {
+    position: absolute; /* ИЛИ relative, fixed, depending on your layout needs */
+    top: 440px; /* Расстояние от верхнего края страницы */
+    left: 340px; /* Расстояние от левого края страницы */
+    display: inline-block; /* Для корректного масштабирования */
+    transition: transform 0.3s ease-in-out; /* Плавный переход */
+}
+
+#navik_button .image-container {
+    text-align: center; /* Центрирование содержимого */
+}
+
+#navik_button img{
+    width: 70px;
+    display: block;
+    margin: 0 auto; /* Центрирование картинки */
+    cursor: pointer;
+}
+
+#navik_button button {
+    text-decoration: none; 
+    display: block;
+    margin: 0 auto;
+    cursor: pointer;
+    margin-top: 0;
+}
+#navik_button:hover {
+    transform: scale(1.1); /* Увеличение при наведении */
+}

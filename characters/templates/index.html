@@ -1,0 +1,29 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Главная страница</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/autorization.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>Добро пожаловать, герой!</h2>
+        <h2>Ваша история начинается здесь.</h2>
+        {% if user.is_authenticated %}
+            <p>Здравствуйте, {{ user.username }}!</p>
+            <a href="{% url 'logout' %}">Выйти</a>
+            <a href="{% url 'home' %}">Играть</a>
+        {% else %}
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Войти</button>
+            </form>
+            <a href="{% url 'register' %}">
+                <button type="submit">Регистрация</button>
+            </a>
+        {% endif %}
+    </div>
+</body>
+</html>

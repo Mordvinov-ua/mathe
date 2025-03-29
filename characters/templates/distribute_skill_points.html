@@ -1,0 +1,31 @@
+{% extends 'home.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Распределение очков навыков</h2>
+    <p>У вас доступно <strong>{{ character.skill_points }}</strong> очков навыков.</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="strength_points">Сила:</label>
+            <input type="number" id="strength_points" name="strength_points" class="form-control" min="0" max="{{ character.skill_points }}" value="0">
+        </div>
+        <div class="form-group">
+            <label for="dexterity_points">Ловкость:</label>
+            <input type="number" id="dexterity_points" name="dexterity_points" class="form-control" min="0" max="{{ character.skill_points }}" value="0">
+        </div>
+        <div class="form-group">
+            <label for="endurance_points">Выносливость:</label>
+            <input type="number" id="endurance_points" name="endurance_points" class="form-control" min="0" max="{{ character.skill_points }}" value="0">
+        </div>
+        <div class="form-group">
+            <label for="luck_points">Удача:</label>
+            <input type="number" id="luck_points" name="luck_points" class="form-control" min="0" max="{{ character.skill_points }}" value="0">
+        </div>
+        <button type="submit" class="btn btn-primary">Распределить очки</button>
+    </form>
+    <a href="{% url 'home' %}">
+        <button type="submit">v gorod</button>
+    </a>
+</div>
+{% endblock %}

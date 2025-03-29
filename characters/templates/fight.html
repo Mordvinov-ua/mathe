@@ -1,0 +1,211 @@
+{% load static%}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fight</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/fight.css' %}">
+</head>
+<body class='body'>
+<div class="container">
+    <!-- Кнопка поиска врага -->
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <button id="search_enemy" class="btn btn-primary">Поиск врага</button>
+        </div>
+        <a href="{% url 'home' %}">
+            <button type="submit" id='nach_hause'>в город</button>
+        </a>
+    </div>
+    <div class="row" id="battle_area" style="display: none;">
+        <!-- Информация о враге -->
+        <div class="col-md-4 text-center">
+            <h3 id="enemy_name">Имя врага</h3>
+            <div id="enemy_health">Здоровье: 100</div>
+            <img id="enemy_image" src="" alt="Изображение врага" class="img-fluid">
+        </div>
+        <!-- Информация о персонаже -->
+        <div class="col-md-4 text-center">
+            <h3 id="player_name">{{ user.character.name }}</h3>
+            <div id="player_health">Здоровье: {{ user.character.health }}</div>
+            <img id="player_image" src="{{ user.character.photo.url }}" alt="Изображение персонажа" class="img-fluid">
+            <button id="fight" class="btn btn-success">Бой</button>
+        </div>
+    </div>
+    <!-- Математический пример и поле для ввода ответа -->
+    <div id="math_input" class="text-center">
+        <div id="math_problem"></div>
+        <input type="text" id="player_answer" placeholder="Ваш ответ">
+        <button id="submit_answer" class="btn btn-primary">Отправить ответ</button>
+    </div>
+    <div id="battle_log" class="row text-center"></div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const characterId = {{ request.user.character.id }};
+        const enemies = {{ enemies|safe }};
+        const character = {
+            strength: {{ request.user.character.strength }},
+            dexterity: {{ request.user.character.dexterity }},
+            luck: {{ request.user.character.luck }}
+        };
+
+        document.getElementById('search_enemy').addEventListener('click', function() {
+            const enemy = enemies[Math.floor(Math.random() * enemies.length)];
+            document.getElementById('enemy_image').src = "{% static '' %}" + enemy.image;
+        
+            const enemyImage = document.getElementById('enemy_image');
+            if (enemyImage) {
+                enemyImage.style.width = '120px';
+            }
+        
+            document.getElementById('enemy_name').textContent = enemy.name;
+            document.getElementById('enemy_health').textContent = 'Здоровье: ' + enemy.health;
+            document.getElementById('battle_area').style.display = 'flex';
+            this.style.display = 'none'; // Скрыть кнопку "Поиск врага"
+        });
+
+        document.getElementById('fight').addEventListener('click', function() {
+            const enemy = enemies.find(e => e.name === document.getElementById('enemy_name').textContent);
+            const log = document.getElementById('battle_log');
+
+            // Function to generate a new math problem
+            function generateMathProblem() {
+                const operations = ['+', '-'];
+                const randomOperation = operations[Math.floor(Math.random() * operations.length)];
+            
+                let x, y, result;
+            
+                if (randomOperation === '+') {
+                    // Генерируем x от 17 до 92 (чтобы x + y ≤ 99)
+                    x = Math.floor(Math.random() * 76) + 17; // x от 17 до 92
+                    // y от 7 до (99 - x)
+                    let maxY = 99 - x;
+                    y = Math.floor(Math.random() * (maxY - 7 + 1)) + 7; // y от 7 до maxY
+                    result = x + y;
+                } else {
+                    // Генерируем x от 24 до 99 (чтобы y ≥ 7)
+                    x = Math.floor(Math.random() * 76) + 24; // x от 24 до 99
+                    // y от 7 до (x - 7)
+                    let maxY = x - 7;
+                    y = Math.floor(Math.random() * (maxY - 7 + 1)) + 7; // y от 7 до maxY
+                    result = x - y;
+                }
+            
+                document.getElementById('math_problem').textContent = `Решите пример: ${x} ${randomOperation} ? = ${result}`;
+                return y; // Возвращаем правильный ответ
+            }
+
+            // Initialize the first math problem
+            let currentResult = generateMathProblem();
+            document.getElementById('math_input').style.display = 'block';
+
+            document.getElementById('submit_answer').addEventListener('click', function() {
+                const playerAnswer = document.getElementById('player_answer').value;
+
+                if (playerAnswer != null) {
+                    let playerHealth = parseInt(document.getElementById('player_health').textContent.split(': ')[1]);
+                    let enemyHealth = parseInt(document.getElementById('enemy_health').textContent.split(': ')[1]);
+
+                    const isPlayerCritical = Math.random() < (character.luck / 100);
+                    const isEnemyCritical = Math.random() < (enemy.luck / 100);
+                    const playerEvade = Math.random() < (character.dexterity / 100);
+                    const enemyEvade = Math.random() < (enemy.dexterity / 100);
+
+
+                    if (parseInt(playerAnswer) === currentResult) {
+                        const playerDamage = (Math.floor(Math.random() * 1) + 1 + character.strength) * (isPlayerCritical ? 2 : 1);
+                        enemyHealth -= playerDamage;
+                        log.innerHTML += `Вы правильно решили пример и нанесли ${playerDamage} урона врагу!<br>`;
+                        if (isPlayerCritical) {
+                            log.innerHTML += 'Критический удар!<br>';
+                        }
+
+                        // Generate a new math problem only if the answer is correct
+                        currentResult = generateMathProblem();
+                        document.getElementById('player_answer').value = ''; // Clear the input field
+                        document.getElementById('fight').style.display = 'none';
+                    } else {
+                        const enemyDamage = (Math.floor(Math.random() * 1) + 1 + enemy.strength) * (isEnemyCritical ? 2 : 1);
+                        playerHealth -= enemyDamage;
+                        log.innerHTML += `Вы неправильно решили пример и получили ${enemyDamage} урона!<br>`;
+                        if (isEnemyCritical) {
+                            log.innerHTML += 'Критический удар врага!<br>';
+                        }
+                        document.getElementById('player_answer').value = '';
+                        document.getElementById('fight').style.display = 'none';
+                    }
+
+                    if (playerEvade) {
+                        log.innerHTML += 'Вы уклонились от атаки врага!<br>';
+                    }
+
+                    if (enemyEvade) {
+                        log.innerHTML += 'Враг уклонился от вашей атаки!<br>';
+                    }
+
+                    document.getElementById('player_health').textContent = 'Здоровье: ' + playerHealth;
+                    document.getElementById('enemy_health').textContent = 'Здоровье: ' + enemyHealth;
+
+                    // Check the health to determine the outcome of the battle
+                    if (playerHealth <= 0) {
+                        alert('Вы проиграли!');
+                        const health_loss = 100;  // Здоровье стало 0
+                        fetch(`/update_character_after_battle/${characterId}/`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            body: `health_loss=${health_loss}&experience_gain=0`  // Здесь опыт будет равен 0
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                alert('Ваши данные обновлены после поражения!');
+                                location.reload(); // Перезагрузить страницу после обновления данных
+                            } else {
+                                alert('Ошибка обновления данных: ' + data.message);
+                            }
+                        })
+                        .catch(error => {
+                            alert('Ошибка обновления данных!');
+                        });
+                    } else if (enemyHealth <= 0) {
+                        alert('Вы победили!');
+                        const health_loss = 100 - playerHealth;
+                        const experience_gain = 15;
+                        fetch(`/update_character_after_battle/${characterId}/`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            body: `health_loss=${health_loss}&experience_gain=${experience_gain}`
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                if (data.level_up) {
+                                    alert('Ваш уровень повышен! Вы перенаправляетесь на страницу распределения очков.');
+                                    window.location.href = `/distribute_skill_points/${characterId}/`;
+                                } else {
+                                    alert('Ваш опыт и здоровье обновлены!');
+                                    location.reload(); // Перезагрузить страницу после победы
+                                }
+                            } else {
+                                alert('Ошибка обновления данных: ' + data.message);
+                            }
+                        })
+                        .catch(error => {
+                            alert('Ошибка обновления данных!');
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

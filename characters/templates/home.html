@@ -1,0 +1,30 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Главная страница</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="map">
+            {% block content %}
+            {% endblock %}
+        </div>
+        <div class="character-info">
+            <h2>{{ user.character.name }}</h2>
+            <p>Уровень: {{ user.character.level }} (Опыт: {{ user.character.experience }})</p>
+            <p>hp: {{ user.character.health }}</p>
+            <img src="{{ user.character.photo.url }}" alt="Фото персонажа">
+            <p>Сила: {{ user.character.strength }}</p>
+            <p>Ловкость: {{ user.character.dexterity }}</p>
+            <p>Выносливость: {{ user.character.endurance }}</p>
+            <p>Удача: {{ user.character.luck }}</p>
+            <a href="{% url 'logout' %}" class="logout-button">
+                <button type="button">Выйти</button>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

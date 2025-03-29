@@ -1,0 +1,107 @@
+.body{
+    background-image: url('/static/images/nachte_wald.jpg'); /* Путь к фоновому изображению */
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Высота страницы */
+    margin: 0; /* Убираем отступы */
+}
+.container {
+    height: 400px;
+    width: 80%; /* Задайте нужную ширину */
+    max-width: 1200px; /* Максимальная ширина */
+    background-color: rgba(255, 255, 255, 0.8); /* Пример фона с прозрачностью */
+    padding: 20px;
+    border-radius: 10px; /* Закругленные углы */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Тень */
+}
+#player_image {
+    width: 120px;
+    margin-bottom: 10px;
+    position: absolute; /* ИЛИ relative, fixed, depending on your layout needs */
+    top: 160px; /* Расстояние от верхнего края страницы */
+    left: 1050px; /* Расстояние от левого края страницы */
+}
+#battle_log {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+    position: absolute; /* ИЛИ relative, fixed, depending on your layout needs */
+    top: 250px; /* Расстояние от верхнего края страницы */
+    left: 450px; /* Расстояние от левого края страницы */
+}
+#math_input {
+    display: none; /* Изначально скрыто */
+    margin-top: 10px;
+    position: absolute; /* ИЛИ relative, fixed, depending on your layout needs */
+    top: 200px; /* Расстояние от верхнего края страницы */
+    left: 500px; /* Расстояние от левого края страницы */
+}
+#math_problem {
+    margin-top: 10px
+}
+#battle_log {
+    background-color: white; /* Белый фон */
+    padding: 10px; /* Отступы внутри контейнера */
+    border-radius: 5px; /* Закругленные углы */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    width: 440px;
+}
+#health_bar {
+    width: 200px;
+    height: 20px;
+    background-color: #ccc; /* Серый фон для пустой шкалы */
+    border: 1px solid #000; /* Черная рамка */
+    border-radius: 5px; /* Сглаженные края */
+    overflow: hidden; /* Обрезаем содержимое, которое выходит за границы */
+}
+
+#health_fill {
+    height: 100%;
+    background-color: green; /* Зелёный цвет здоровья */
+    width: 100%; /* Начальное значение: полное здоровье */
+    transition: width 0.3s ease, background-color 0.3s ease; /* Плавное изменение ширины и цвета */
+}
+.btn{
+    position: absolute; /* ИЛИ relative, fixed, depending on your layout needs */
+    top: 160px; /* Расстояние от верхнего края страницы */
+    left: 650px; /* Расстояние от левого края страницы */
+}
+#submit_answer{
+    position: absolute; /* ИЛИ relative, fixed, depending on your layout needs */
+    top: 20px; /* Расстояние от верхнего края страницы */
+    left: 220px; /* Расстояние от левого края страницы */
+}
+#player_name{
+    position: absolute; /* ИЛИ relative, fixed, depending on your layout needs */
+    top: 75px; /* Расстояние от верхнего края страницы */
+    left: 1080px; /* Расстояние от левого края страницы */
+}
+#player_health{
+    position: absolute; /* ИЛИ relative, fixed, depending on your layout needs */
+    top: 125px; /* Расстояние от верхнего края страницы */
+    left: 1065px; /* Расстояние от левого края страницы */
+}
+#nach_hause{
+    position: absolute; /* ИЛИ relative, fixed, depending on your layout needs */
+    top: 50px; /* Расстояние от верхнего края страницы */
+    left: 50px; /* Расстояние от левого края страницы */
+}
+#enemy_name{
+    position: absolute; /* ИЛИ relative, fixed, depending on your layout needs */
+    top: 75px; /* Расстояние от верхнего края страницы */
+    left: 215px; /* Расстояние от левого края страницы */
+}
+#enemy_health{
+    position: absolute; /* ИЛИ relative, fixed, depending on your layout needs */
+    top: 125px; /* Расстояние от верхнего края страницы */
+    left: 190px; /* Расстояние от левого края страницы */
+}
+#enemy_image{
+    position: absolute; /* ИЛИ relative, fixed, depending on your layout needs */
+    top: 160px; /* Расстояние от верхнего края страницы */
+    left: 180px; /* Расстояние от левого края страницы */
+}

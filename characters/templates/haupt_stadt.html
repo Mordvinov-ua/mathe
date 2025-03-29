@@ -1,0 +1,70 @@
+{% extends 'home.html' %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/haupt_stadt.css' %}">
+<div class="container">
+    <div class="row text-center" id="heartz">
+        <div class="image-container">
+            <img src="/static/images/heartz.png" alt="">
+            <button id="heal_button" class="btn btn-primary">Лечиться</button>
+        </div>
+    </div>
+    <a href="#" id="go_fight_button" data-health="{{ user.character.health }}" data-max-health="{{ user.character.max_health }}">
+        <div class="image-container">
+            <img src="/static/images/wald_icon.png" alt="">
+            <button type="button" class="btn btn-primary">Лес</button>
+        </div>
+    </a>
+    <a href="{% url 'distribute_skill_points' user.character.id %}" id="navik_button">
+        <div class="image-container">
+            <img src="/static/images/navik.png" alt="">
+            <button type="button" class="btn btn-primary">Распределить очки навыков</button>
+        </div>
+    </a>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const characterId = {{ request.user.character.id }};
+        let healInterval;
+
+        // Функция для обновления здоровья в реальном времени
+        function updateHealth() {
+            fetch(`/update_character_health/${characterId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        document.getElementById('player_health').textContent = 'Здоровье: ' + data.health;
+                        document.getElementById('go_fight_button').setAttribute('data-health', data.health); // Обновить значение здоровья
+                        if (data.health >= {{ user.character.max_health }}) {
+                            clearInterval(healInterval);
+                            document.getElementById('heal_button').disabled = false;
+                            alert('Вы достигли максимального здоровья!');
+                        }
+                    } else {
+                        console.error('Ошибка обновления здоровья: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка: ', error);
+                });
+        }
+
+        document.getElementById('heal_button').addEventListener('click', function() {
+            healInterval = setInterval(updateHealth, 10000);  // 10000 миллисекунд = 10 секунд
+            document.getElementById('heal_button').disabled = true;
+        });
+
+        document.getElementById('go_fight_button').addEventListener('click', function(event) {
+            event.preventDefault();  // Предотвращаем переход по ссылке по умолчанию
+            const health = parseInt(this.getAttribute('data-health'));
+            const maxHealth = parseInt(this.getAttribute('data-max-health'));
+            if (health < (0.2 * maxHealth)) {
+                alert('Вы не можете вступить в бой с таким низким здоровьем, на кладбище и так нет места.');
+            } else {
+                window.location.href = "{% url 'fight' %}";  // Переход к странице боя
+            }
+        });
+    });
+</script>
+{% endblock %}
